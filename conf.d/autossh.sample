@@ -1,0 +1,10 @@
+#autossh_binary=/usr/bin/autossh
+forwarded_ports="-R 2222:localhost:22"
+monitor_port=20000
+#monitor_echo_port=20001
+#pidfile=/run/autossh.sample.pid
+#run_as_user=root
+ssh_host=host.domain.tld
+#ssh_identity=/root/.ssh/id_rsa
+#ssh_port=22
+#ssh_user=root
