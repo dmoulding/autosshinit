@@ -1,0 +1,52 @@
+#!/sbin/runscript
+
+autossh_binary=${autossh_binary:-/usr/bin/autossh}
+monitor_optarg=${monitor_port}${monitor_echo_port:+:${monitor_echo_port}}
+pidfile=${pidfile:-/run/$RC_SVCNAME.pid}
+
+depend() {
+    need net
+}
+
+start() {
+    if [[ -z "$forwarded_ports" ]]; then
+        eerror "No forwarded_ports are configured"
+        return 1
+    fi
+
+    if [[ -z "$monitor_port" ]]; then
+        eerror "monitor_port isn't configured"
+        return 1
+    fi
+
+    if [[ -z "$ssh_host" ]]; then
+        eerror "ssh_host isn't configured"
+        return 1
+    fi
+
+    local ssd_opts=
+    ssd_opts+="--start"
+    ssd_opts+=" --env AUTOSSH_PIDFILE=$pidfile"
+    ssd_opts+=" --exec $autossh_binary"
+    ssd_opts+=" --pidfile $pidfile"
+    ssd_opts+="${run_as_user:+ --user ${run_as_user}}"
+
+    local autossh_opts=
+    autossh_opts+="-M $monitor_optarg"
+    autossh_opts+=" -f"
+    autossh_opts+=" -N"
+    autossh_opts+=" $forwarded_ports"
+    autossh_opts+="${ssh_identity:+ -i ${ssh_identity}}"
+    autossh_opts+="${ssh_port:+ -p ${ssh_port}}"
+    autossh_opts+=" ${ssh_user:+${ssh_user}@}$ssh_host"
+
+    ebegin "Starting $RC_SVCNAME"
+    start-stop-daemon $ssd_opts -- $autossh_opts
+    eend $?
+}
+
+# Local Variables:
+# mode: sh
+# sh-basic-offset: 4
+# indent-tabs-mode: nil
+# End:
