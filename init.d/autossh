@@ -1,4 +1,4 @@
-#!/sbin/runscript
+#!/sbin/openrc-run
 
 autossh_binary=${autossh_binary:-/usr/bin/autossh}
 monitor_optarg=${monitor_port}${monitor_echo_port:+:${monitor_echo_port}}
