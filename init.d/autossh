@@ -45,6 +45,13 @@ start() {
     eend $?
 }
 
+stop() {
+    ebegin "Stoppping $RC_SVCNAME"
+    ssd_opts+=" --stop $RC_SVCNAME"
+    ssd_opts+=" --pidfile $pidfile"
+    start-stop-daemon $ssd_opts -- $autossh_opts
+}
+
 # Local Variables:
 # mode: sh
 # sh-basic-offset: 4
