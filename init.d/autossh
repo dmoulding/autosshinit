@@ -26,14 +26,13 @@ start() {
 
     local ssd_opts=
     ssd_opts+="--start"
-    ssd_opts+=" --env AUTOSSH_PIDFILE=$pidfile"
     ssd_opts+=" --exec $autossh_binary"
     ssd_opts+=" --pidfile $pidfile"
     ssd_opts+="${run_as_user:+ --user ${run_as_user}}"
+    ssd_opts+=" --background --make-pidfile"
 
     local autossh_opts=
     autossh_opts+="-M $monitor_optarg"
-    autossh_opts+=" -f"
     autossh_opts+=" -N"
     autossh_opts+=" $forwarded_ports"
     autossh_opts+="${ssh_identity:+ -i ${ssh_identity}}"
